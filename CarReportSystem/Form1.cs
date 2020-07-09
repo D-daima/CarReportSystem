@@ -48,7 +48,7 @@ namespace CarReportSystem {
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            if (cbAuthor.Text == "" && cbName.Text == "" && CheckRbottom() == CarReport.CarMaker.DEFAULT) {
+            if (cbAuthor.Text == "" || cbName.Text == "" || CheckRbottom() == CarReport.CarMaker.DEFAULT) {
                 MessageBox.Show("記録者と車名を入力、メーカーを選択してください。",
                 "エラー",
                 MessageBoxButtons.OK,
@@ -99,7 +99,14 @@ namespace CarReportSystem {
 
         private void btDeleteImage_Click(object sender, EventArgs e)
         {
-            pbImage.Image = null;
+            if(pbImage.Image != null) {
+                DialogResult dialog = MessageBox.Show("本当によろしいですか？", "確認", MessageBoxButtons.YesNo);
+                if (dialog == DialogResult.Yes) {
+                    pbImage.Image = null;
+                } else if (dialog == DialogResult.No) {
+
+                }
+            }
         }
 
         private void btChange_Click(object sender, EventArgs e)
@@ -173,10 +180,14 @@ namespace CarReportSystem {
                     }
                     catch (SerializationException se)
                     {
-                        
                         Console.WriteLine("Failed to deserialize. Reason: " + se.Message);
                         throw;
                     }
+                }
+                //メーカー、車名を読み込み
+                for (int i = 0; i < dgvCarReportData.Rows.Count; i++) {
+                    setComboBoxAuthor(_CarReports[i].Author);
+                    setComboBoxCarName(_CarReports[i].CarName);
                 }
             }
         }
@@ -244,6 +255,55 @@ namespace CarReportSystem {
                     }
                     catch (SerializationException se) {
                         Console.WriteLine("Failed to serialize. Reason: " + se.Message);
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private void 新規作成ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            inputItemClear();
+        }
+
+        private void 終了XToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void 保存ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sfdSaveData.ShowDialog() == DialogResult.OK) {
+                BinaryFormatter formatter = new BinaryFormatter();
+                //ファイルストリームを作成
+                using (FileStream fs = new FileStream(sfdSaveData.FileName, FileMode.Create)) {
+                    try {
+                        formatter.Serialize(fs, _CarReports);
+                    }
+                    catch (SerializationException se) {
+                        Console.WriteLine("Failed to serialize. Reason: " + se.Message);
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private void 開くOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ofdDateOpen.ShowDialog() == DialogResult.OK) {
+                using (FileStream fs = new FileStream(ofdDateOpen.FileName, FileMode.Open)) {
+                    try {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        //逆シリアル化して読み込む
+                        _CarReports = (BindingList<CarReport>)formatter.Deserialize(fs);
+                        //データグリッドビューに再設定
+                        dgvCarReportData.DataSource = _CarReports;
+                        initButton();
+                        //選択されている箇所をコントロールへ表示
+                        dgvCarReportData_Click(sender, e);//イベントハンドラを呼び出す
+                    }
+                    catch (SerializationException se) {
+                        Console.WriteLine("Failed to deserialize. Reason: " + se.Message);
                         throw;
                     }
                 }
