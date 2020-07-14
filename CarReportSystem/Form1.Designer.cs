@@ -60,8 +60,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.新規作成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.終了XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.終了XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.開くOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCarReportData)).BeginInit();
@@ -256,7 +256,7 @@
             this.btOpenImage.Name = "btOpenImage";
             this.btOpenImage.Size = new System.Drawing.Size(69, 26);
             this.btOpenImage.TabIndex = 9;
-            this.btOpenImage.Text = "開く";
+            this.btOpenImage.Text = "開く...";
             this.btOpenImage.UseVisualStyleBackColor = true;
             this.btOpenImage.Click += new System.EventHandler(this.btOpenImage_Click);
             // 
@@ -402,28 +402,28 @@
             // 新規作成ToolStripMenuItem
             // 
             this.新規作成ToolStripMenuItem.Name = "新規作成ToolStripMenuItem";
-            this.新規作成ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.新規作成ToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.新規作成ToolStripMenuItem.Text = "新規作成";
             this.新規作成ToolStripMenuItem.Click += new System.EventHandler(this.新規作成ToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(152, 6);
             // 
             // 終了XToolStripMenuItem
             // 
             this.終了XToolStripMenuItem.Name = "終了XToolStripMenuItem";
             this.終了XToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.終了XToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.終了XToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.終了XToolStripMenuItem.Text = "終了(&X)";
             this.終了XToolStripMenuItem.Click += new System.EventHandler(this.終了XToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // 保存ToolStripMenuItem
             // 
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
             this.保存ToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.保存ToolStripMenuItem.Text = "保存(&S)";
             this.保存ToolStripMenuItem.Click += new System.EventHandler(this.保存ToolStripMenuItem_Click);
             // 
@@ -431,7 +431,7 @@
             // 
             this.開くOToolStripMenuItem.Name = "開くOToolStripMenuItem";
             this.開くOToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.開くOToolStripMenuItem.Text = "開く(&O)";
             this.開くOToolStripMenuItem.Click += new System.EventHandler(this.開くOToolStripMenuItem_Click);
             // 
