@@ -19,36 +19,45 @@ namespace CarReportSystem {
         public Form1()
         {
             InitializeComponent();
-            dgvCarReportData.DataSource = _CarReports;
+            //dgvCarReportData.DataSource = _CarReports;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // TODO: このコード行はデータを 'infosys202002DataSet.CarReport' テーブルに読み込みます。必要に応じて移動、または削除をしてください。
+            dgvCarReportData.Columns[0].Visible = false; //idを非表示にする
             initButton();
         }
 
-        private CarReport.CarMaker CheckRbottom()
+        private void CheckRbottom()
         {
-            if (rbToyota.Checked == true) {
-                return CarReport.CarMaker.トヨタ;
-            } else if (rbNissan.Checked == true) {
-                return CarReport.CarMaker.日産;
-            } else if (rbHonda.Checked == true) {
-                return CarReport.CarMaker.ホンダ;
-            } else if (rbSubaru.Checked == true) {
-                return CarReport.CarMaker.スバル;
-            } else if (rbOutCar.Checked == true) {
-                return CarReport.CarMaker.外車;
-            } else if(rbOther.Checked == true){
-                return CarReport.CarMaker.その他;
+            var maker = dgvCarReportData.CurrentRow.Cells[3].Value;
+            switch (maker) {
+                case  "トヨタ":
+                    rbToyota.Checked = true;
+                    break;
+                case "日産":
+                    rbNissan.Checked = true;
+                    break;
+                case "ホンダ":
+                    rbHonda.Checked = true;
+                    break;
+                case "スバル":
+                    rbSubaru.Checked = true;
+                    break;
+                case "外車":
+                    rbOutCar.Checked = true;
+                    break;
+                case "その他":
+                    rbOther.Checked = true;
+                    break;
             }
-            return CarReport.CarMaker.DEFAULT;
         }
 
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            if (cbAuthor.Text == "" || cbName.Text == "" || CheckRbottom() == CarReport.CarMaker.DEFAULT) {
+            if (cbAuthor.Text == "" || cbName.Text == "") {
                 MessageBox.Show("記録者と車名を入力、メーカーを選択してください。",
                 "エラー",
                 MessageBoxButtons.OK,
@@ -59,7 +68,6 @@ namespace CarReportSystem {
             {
                 CreatedDate = dtpCreatedDate.Value,
                 Author = cbAuthor.Text,
-                Maker = CheckRbottom(),
                 CarName = cbName.Text,
                 Report = tbReport.Text,
                 imgPicture = pbImage.Image
@@ -67,6 +75,7 @@ namespace CarReportSystem {
             };
             setComboBoxAuthor(cbAuthor.Text);
             setComboBoxCarName(cbName.Text);
+             dgvCarReportData.SelectedCells.ToString();
             _CarReports.Insert(0, carReport);
             dgvCarReportData.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgvCarReportData.ClearSelection();
@@ -114,7 +123,7 @@ namespace CarReportSystem {
             CarReport carChange = _CarReports[dgvCarReportData.CurrentRow.Index];
             carChange.CreatedDate = dtpCreatedDate.Value;
             carChange.Author = cbAuthor.Text;
-            carChange.Maker = CheckRbottom();
+            CheckRbottom();
             carChange.CarName = cbName.Text;
             carChange.Report = tbReport.Text;
             carChange.imgPicture = pbImage.Image;
@@ -138,7 +147,7 @@ namespace CarReportSystem {
 
         private void btDelete_Click(object sender, EventArgs e)
         {
-            _CarReports.RemoveAt(dgvCarReportData.CurrentRow.Index);
+            
             dgvCarReportData.Refresh();
             inputItemClear();
             initButton();
@@ -164,7 +173,7 @@ namespace CarReportSystem {
 
         private void btOpenFile_Click(object sender, EventArgs e)
         {
-            if (ofdDateOpen.ShowDialog() == DialogResult.OK) {
+            /*if (ofdDateOpen.ShowDialog() == DialogResult.OK) {
                 using (FileStream fs = new FileStream(ofdDateOpen.FileName, FileMode.Open))
                 {
                     try 
@@ -189,7 +198,10 @@ namespace CarReportSystem {
                     setComboBoxAuthor(_CarReports[i].Author);
                     setComboBoxCarName(_CarReports[i].CarName);
                 }
-            }
+            }*/
+            this.carReportTableAdapter.Fill(this.infosys202002DataSet.CarReport);
+            dgvCarReportData_Click(sender, e);
+            
         }
 
         private void Check(CarReport.CarMaker maker)
@@ -233,13 +245,16 @@ namespace CarReportSystem {
             if (dgvCarReportData.CurrentRow == null) {
                 return;
             }
-            CarReport selectedCar = _CarReports[dgvCarReportData.CurrentRow.Index];
+            //var test =  dgvCarReportData.CurrentRow.Cells[2].Value;
+            CheckRbottom();
+            
+            /*CarReport selectedCar = _CarReports[dgvCarReportData.CurrentRow.Index];
             dtpCreatedDate.Value = selectedCar.CreatedDate;
             cbAuthor.Text = selectedCar.Author;
             Check(selectedCar.Maker);
             cbName.Text = selectedCar.CarName;
             tbReport.Text = selectedCar.Report;
-            pbImage.Image = selectedCar.imgPicture;
+            pbImage.Image = selectedCar.imgPicture;*/
         }
 
         private void btSaveFile_Click(object sender, EventArgs e)
