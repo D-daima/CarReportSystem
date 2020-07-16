@@ -31,6 +31,7 @@ namespace CarReportSystem {
 
         private void CheckRbottom()
         {
+            //選択したレコード（行）のインデックスで指定した項目を取り出す
             var maker = dgvCarReportData.CurrentRow.Cells[3].Value;
             switch (maker) {
                 case  "トヨタ":
@@ -51,6 +52,9 @@ namespace CarReportSystem {
                 case "その他":
                     rbOther.Checked = true;
                     break;
+                default:
+                    rbOther.Checked = true;
+                    break;
             }
         }
 
@@ -64,7 +68,7 @@ namespace CarReportSystem {
                 MessageBoxIcon.Error);
                 return;
             }
-            CarReport carReport = new CarReport()
+            /*CarReport carReport = new CarReport()
             {
                 CreatedDate = dtpCreatedDate.Value,
                 Author = cbAuthor.Text,
@@ -72,20 +76,22 @@ namespace CarReportSystem {
                 Report = tbReport.Text,
                 imgPicture = pbImage.Image
 
-            };
+            };*/
             setComboBoxAuthor(cbAuthor.Text);
             setComboBoxCarName(cbName.Text);
-             dgvCarReportData.SelectedCells.ToString();
-            _CarReports.Insert(0, carReport);
+            dgvCarReportData.SelectedCells.ToString();
+            //_CarReports.Insert(0, carReport);
             dgvCarReportData.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgvCarReportData.ClearSelection();
+            //dgvCarReportData.ClearSelection();
             initButton();
             inputItemClear();
+
+            dgvCarReportData.CurrentRow.Cells[6].Value = pbImage.Image;
+            dgvCarReportData.ClearSelection();
         }
 
         private void inputItemClear()
         {
-            
             cbAuthor.Text = "";
             cbName.Text = "";
             Deleted();
@@ -120,17 +126,14 @@ namespace CarReportSystem {
 
         private void btChange_Click(object sender, EventArgs e)
         {
-            CarReport carChange = _CarReports[dgvCarReportData.CurrentRow.Index];
-            carChange.CreatedDate = dtpCreatedDate.Value;
-            carChange.Author = cbAuthor.Text;
-            CheckRbottom();
-            carChange.CarName = cbName.Text;
-            carChange.Report = tbReport.Text;
-            carChange.imgPicture = pbImage.Image;
-            setComboBoxAuthor(cbAuthor.Text);
-            setComboBoxCarName(cbName.Text);
-            inputItemClear();
-            dgvCarReportData.Refresh();
+            dgvCarReportData.CurrentRow.Cells[1].Value = dtpCreatedDate.Value;
+            dgvCarReportData.CurrentRow.Cells[2].Value = cbAuthor.Text;
+            dgvCarReportData.CurrentRow.Cells[3].Value = 
+
+            //データベース反映
+            this.Validate();
+            this.carReportBindingSource.EndEdit();
+            this.tableAdapterManager.UpdateAll(this.infosys202002DataSet);
 
         }
 
@@ -204,23 +207,26 @@ namespace CarReportSystem {
             
         }
 
-        private void Check(CarReport.CarMaker maker)
+        private string Check()
         {
-            if(CarReport.CarMaker.トヨタ == maker) {
-                 rbToyota.Checked = true;
-            } else if (CarReport.CarMaker.日産 == maker) {
-                rbNissan.Checked = true;
-            } else if (CarReport.CarMaker.ホンダ == maker) {
-                rbHonda.Checked = true;
-            } else if (CarReport.CarMaker.スバル == maker) {
-                rbSubaru.Checked = true;
-            } else if (CarReport.CarMaker.外車 == maker) {
-                rbOutCar.Checked = true;
-            } else if (CarReport.CarMaker.その他 == maker) {
-                rbOther.Checked = true;
+            
+            switch (maker) {
+                case "トヨタ":
+                    return "トヨタ";
+                case "日産":
+                    return "日産";
+                case "ホンダ":
+                    return "ホンダ";
+                case "スバル":
+                    return "スバル";
+                case "外車":
+                    return "外車";
+                case "その他":
+                    return "その他";
+                default:
+                    return "その他";
             }
         }
-
 
         private void Deleted()
         {
@@ -324,5 +330,21 @@ namespace CarReportSystem {
                 }
             }
         }
+
+        public static Image ByteArrayToImage(byte[] byteData)
+        {
+            ImageConverter imgconv = new ImageConverter();
+            Image img = (Image)imgconv.ConvertFrom(byteData);
+            return img;
+        }
+
+        // Imageオブジェクトをバイト配列に変換
+        public static byte[] ImageToByteArray(Image img)
+        {
+            ImageConverter imgconv = new ImageConverter();
+            byte[] byteData = (byte[])imgconv.ConvertTo(img, typeof(byte[]));
+            return byteData;
+        }
+
     }
 }

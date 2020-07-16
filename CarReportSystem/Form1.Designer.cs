@@ -398,7 +398,7 @@
             this.ファイルFToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(765, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(855, 24);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -473,13 +473,13 @@
             this.dataGridViewTextBoxColumn6,
             this.dataGridViewImageColumn1});
             this.dgvCarReportData.DataSource = this.carReportBindingSource;
-            this.dgvCarReportData.Location = new System.Drawing.Point(118, 317);
+            this.dgvCarReportData.Location = new System.Drawing.Point(99, 317);
             this.dgvCarReportData.MultiSelect = false;
             this.dgvCarReportData.Name = "dgvCarReportData";
             this.dgvCarReportData.ReadOnly = true;
             this.dgvCarReportData.RowTemplate.Height = 21;
             this.dgvCarReportData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvCarReportData.Size = new System.Drawing.Size(635, 159);
+            this.dgvCarReportData.Size = new System.Drawing.Size(744, 159);
             this.dgvCarReportData.TabIndex = 23;
             this.dgvCarReportData.Click += new System.EventHandler(this.dgvCarReportData_Click);
             // 
@@ -536,7 +536,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(765, 520);
+            this.ClientSize = new System.Drawing.Size(855, 521);
             this.Controls.Add(this.dgvCarReportData);
             this.Controls.Add(this.dtpCreatedDate);
             this.Controls.Add(this.groupBox1);
