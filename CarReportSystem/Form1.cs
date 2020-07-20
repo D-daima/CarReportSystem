@@ -68,19 +68,10 @@ namespace CarReportSystem {
                 MessageBoxIcon.Error);
                 return;
             }
-            /*CarReport carReport = new CarReport()
-            {
-                CreatedDate = dtpCreatedDate.Value,
-                Author = cbAuthor.Text,
-                CarName = cbName.Text,
-                Report = tbReport.Text,
-                imgPicture = pbImage.Image
 
-            };*/
             setComboBoxAuthor(cbAuthor.Text);
             setComboBoxCarName(cbName.Text);
             dgvCarReportData.SelectedCells.ToString();
-            //_CarReports.Insert(0, carReport);
             dgvCarReportData.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             //dgvCarReportData.ClearSelection();
             initButton();
@@ -128,7 +119,11 @@ namespace CarReportSystem {
         {
             dgvCarReportData.CurrentRow.Cells[1].Value = dtpCreatedDate.Value;
             dgvCarReportData.CurrentRow.Cells[2].Value = cbAuthor.Text;
-            dgvCarReportData.CurrentRow.Cells[3].Value = 
+            dgvCarReportData.CurrentRow.Cells[3].Value = Check();
+            dgvCarReportData.CurrentRow.Cells[4].Value = cbName.Text;
+            dgvCarReportData.CurrentRow.Cells[5].Value = tbReport.Text;
+            dgvCarReportData.CurrentRow.Cells[6].Value = pbImage.Image;
+            dgvCarReportData.ClearSelection();
 
             //データベース反映
             this.Validate();
@@ -139,7 +134,7 @@ namespace CarReportSystem {
 
         private void initButton()
         {
-            if (_CarReports.Count <= 0) {
+            if (dgvCarReportData.RowCount<= 0) {
                 btChange.Enabled = false;
                 btDelete.Enabled = false;
             } else {
@@ -209,22 +204,18 @@ namespace CarReportSystem {
 
         private string Check()
         {
-            
-            switch (maker) {
-                case "トヨタ":
-                    return "トヨタ";
-                case "日産":
-                    return "日産";
-                case "ホンダ":
-                    return "ホンダ";
-                case "スバル":
-                    return "スバル";
-                case "外車":
-                    return "外車";
-                case "その他":
-                    return "その他";
-                default:
-                    return "その他";
+            if (rbToyota.Checked == true) {
+                return "トヨタ";
+            } else if (rbNissan.Checked == true) {
+                return "日産";
+            } else if (rbHonda.Checked == true) {
+                return "ホンダ";
+            } else if (rbSubaru.Checked == true) {
+                return "スバル";
+            } else if (rbOutCar.Checked == true) {
+                return "外車";
+            } else {
+                return "その他";
             }
         }
 
@@ -251,21 +242,29 @@ namespace CarReportSystem {
             if (dgvCarReportData.CurrentRow == null) {
                 return;
             }
-            //var test =  dgvCarReportData.CurrentRow.Cells[2].Value;
+            //var test =  dgvCarReportData.CurrentRow.Cells[2].Valu
+            try {
+                dtpCreatedDate.Value = (DateTime)dgvCarReportData.CurrentRow.Cells[1].Value;
+            }
+            catch (System.InvalidCastException) {
+                dtpCreatedDate.Value = DateTime.Now;
+                cbAuthor.Text = "";
+                CheckRbottom();
+                cbName.Text = "";
+                tbReport.Text = "";
+            }
+            cbAuthor.Text = dgvCarReportData.CurrentRow.Cells[2].Value.ToString();
             CheckRbottom();
+            cbName.Text = dgvCarReportData.CurrentRow.Cells[4].Value.ToString();
+            tbReport.Text = dgvCarReportData.CurrentRow.Cells[5].Value.ToString();
+            //pbImage.Image = ByteArrayToImage(dgvCarReportData.CurrentRow.Cells[6].Value);
+            //pbImage.Image = (Image)dgvCarReportData.CurrentRow.Cells[6].Value;
             
-            /*CarReport selectedCar = _CarReports[dgvCarReportData.CurrentRow.Index];
-            dtpCreatedDate.Value = selectedCar.CreatedDate;
-            cbAuthor.Text = selectedCar.Author;
-            Check(selectedCar.Maker);
-            cbName.Text = selectedCar.CarName;
-            tbReport.Text = selectedCar.Report;
-            pbImage.Image = selectedCar.imgPicture;*/
         }
 
         private void btSaveFile_Click(object sender, EventArgs e)
         {
-            if (sfdSaveData.ShowDialog() == DialogResult.OK) {
+            /*if (sfdSaveData.ShowDialog() == DialogResult.OK) {
 
                 BinaryFormatter formatter = new BinaryFormatter();
 
@@ -279,7 +278,12 @@ namespace CarReportSystem {
                         throw;
                     }
                 }
-            }
+            }*/
+
+            //データベース更新（反映）
+            this.Validate();
+            this.carReportBindingSource.EndEdit();
+            this.tableAdapterManager.UpdateAll(this.infosys202002DataSet);
         }
 
         private void 新規作成ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -331,6 +335,7 @@ namespace CarReportSystem {
             }
         }
 
+        //バイト配列を
         public static Image ByteArrayToImage(byte[] byteData)
         {
             ImageConverter imgconv = new ImageConverter();
