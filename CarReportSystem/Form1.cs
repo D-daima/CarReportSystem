@@ -122,7 +122,13 @@ namespace CarReportSystem {
             dgvCarReportData.CurrentRow.Cells[3].Value = Check();
             dgvCarReportData.CurrentRow.Cells[4].Value = cbName.Text;
             dgvCarReportData.CurrentRow.Cells[5].Value = tbReport.Text;
-            dgvCarReportData.CurrentRow.Cells[6].Value = pbImage.Image;
+            
+            if (pbImage.Image != null) {
+                dgvCarReportData.CurrentRow.Cells[6].Value = ImageToByteArray(pbImage.Image);
+            } else {
+                dgvCarReportData.CurrentRow.Cells[6].Value = null;
+            }
+            
             dgvCarReportData.ClearSelection();
 
             //データベース反映
@@ -145,11 +151,18 @@ namespace CarReportSystem {
 
         private void btDelete_Click(object sender, EventArgs e)
         {
-            
+            dgvCarReportData.CurrentRow.Cells[1].Value = DateTime.Now;
+            dgvCarReportData.CurrentRow.Cells[2].Value = "";
+            dgvCarReportData.CurrentRow.Cells[3].Value = Check();
+            dgvCarReportData.CurrentRow.Cells[4].Value = "";
+            dgvCarReportData.CurrentRow.Cells[5].Value = "";
+            dgvCarReportData.CurrentRow.Cells[6].Value = null;
             dgvCarReportData.Refresh();
-            inputItemClear();
             initButton();
             dgvCarReportData.ClearSelection();
+            this.Validate();
+            this.carReportBindingSource.EndEdit();
+            this.tableAdapterManager.UpdateAll(this.infosys202002DataSet);
         }
 
 
@@ -171,35 +184,12 @@ namespace CarReportSystem {
 
         private void btOpenFile_Click(object sender, EventArgs e)
         {
-            /*if (ofdDateOpen.ShowDialog() == DialogResult.OK) {
-                using (FileStream fs = new FileStream(ofdDateOpen.FileName, FileMode.Open))
-                {
-                    try 
-                    {
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        //逆シリアル化して読み込む
-                        _CarReports = (BindingList<CarReport>)formatter.Deserialize(fs);
-                        //データグリッドビューに再設定
-                        dgvCarReportData.DataSource = _CarReports;
-                        initButton();
-                        //選択されている箇所をコントロールへ表示
-                        dgvCarReportData_Click(sender, e);//イベントハンドラを呼び出す
-                    }
-                    catch (SerializationException se)
-                    {
-                        Console.WriteLine("Failed to deserialize. Reason: " + se.Message);
-                        throw;
-                    }
-                }
-                //メーカー、車名を読み込み
-                for (int i = 0; i < dgvCarReportData.Rows.Count; i++) {
-                    setComboBoxAuthor(_CarReports[i].Author);
-                    setComboBoxCarName(_CarReports[i].CarName);
-                }
-            }*/
             this.carReportTableAdapter.Fill(this.infosys202002DataSet.CarReport);
             dgvCarReportData_Click(sender, e);
-            
+            for (int i = 0; i < dgvCarReportData.Rows.Count-1; i++) {
+                setComboBoxAuthor(dgvCarReportData.Rows[i].Cells[2].Value.ToString());
+                setComboBoxCarName(dgvCarReportData.Rows[i].Cells[4].Value.ToString());
+            } 
         }
 
         private string Check()
@@ -236,50 +226,36 @@ namespace CarReportSystem {
             }
         }
 
-
         private void dgvCarReportData_Click(object sender, EventArgs e)
         {
             if (dgvCarReportData.CurrentRow == null) {
                 return;
             }
-            //var test =  dgvCarReportData.CurrentRow.Cells[2].Valu
+
             try {
                 dtpCreatedDate.Value = (DateTime)dgvCarReportData.CurrentRow.Cells[1].Value;
             }
-            catch (System.InvalidCastException) {
+            catch (InvalidCastException) {
                 dtpCreatedDate.Value = DateTime.Now;
-                cbAuthor.Text = "";
-                CheckRbottom();
-                cbName.Text = "";
-                tbReport.Text = "";
             }
-            cbAuthor.Text = dgvCarReportData.CurrentRow.Cells[2].Value.ToString();
-            CheckRbottom();
-            cbName.Text = dgvCarReportData.CurrentRow.Cells[4].Value.ToString();
-            tbReport.Text = dgvCarReportData.CurrentRow.Cells[5].Value.ToString();
-            //pbImage.Image = ByteArrayToImage(dgvCarReportData.CurrentRow.Cells[6].Value);
-            //pbImage.Image = (Image)dgvCarReportData.CurrentRow.Cells[6].Value;
-            
+
+            try {
+                cbAuthor.Text = dgvCarReportData.CurrentRow.Cells[2].Value.ToString();
+                CheckRbottom();
+                cbName.Text = dgvCarReportData.CurrentRow.Cells[4].Value.ToString();
+                tbReport.Text = dgvCarReportData.CurrentRow.Cells[5].Value.ToString();
+                pbImage.Image = ByteArrayToImage((byte[])dgvCarReportData.CurrentRow.Cells[6].Value);
+            }
+            catch (InvalidCastException) {//画像がDBに登録されていないとき
+                pbImage.Image = null;
+            }
+            catch (Exception ex) {//上記以外のデータすべて拾う
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btSaveFile_Click(object sender, EventArgs e)
         {
-            /*if (sfdSaveData.ShowDialog() == DialogResult.OK) {
-
-                BinaryFormatter formatter = new BinaryFormatter();
-
-                //ファイルストリームを作成
-                using (FileStream fs = new FileStream(sfdSaveData.FileName, FileMode.Create)) {
-                    try {
-                        formatter.Serialize(fs, _CarReports);
-                    }
-                    catch (SerializationException se) {
-                        Console.WriteLine("Failed to serialize. Reason: " + se.Message);
-                        throw;
-                    }
-                }
-            }*/
-
             //データベース更新（反映）
             this.Validate();
             this.carReportBindingSource.EndEdit();
