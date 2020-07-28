@@ -327,5 +327,12 @@ namespace CarReportSystem {
             return byteData;
         }
 
+        private void btSearchExe_Click(object sender, EventArgs e)
+        {
+            //this.carReportTableAdapter.FillByCarName(this.infosys202002DataSet.CarReport, tbSearchCarName.Text);
+            //this.carReportTableAdapter.FillByCarDate(this.infosys202002DataSet.CarReport, dtpSearch.Value.ToString());
+            //this.carReportTableAdapter.FillByCarMaker(this.infosys202002DataSet.CarReport, cbcarMaker.Text);
+            this.carReportTableAdapter.FillBycarSearch(this.infosys202002DataSet.CarReport, dtpSearch.Value.ToString(), cbcarMaker.Text, tbSearchCarName.Text);
+        }
     }
 }
